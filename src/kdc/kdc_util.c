@@ -733,8 +733,9 @@ validate_as_request(kdc_realm_t *kdc_active_realm,
         return(KDC_ERR_S_PRINCIPAL_UNKNOWN);
     }
 
-    /* Check to see if server is allowed to be a service */
-    if (isflagset(server.attributes, KRB5_KDB_DISALLOW_SVR)) {
+    /* Check to see if server is allowed to be a (possibly u2u) service */
+    if (isflagset(server.attributes, KRB5_KDB_DISALLOW_SVR) &&
+        !isflagset(request->kdc_options, KDC_OPT_ENC_TKT_IN_SKEY)) {
         *status = "SERVICE NOT ALLOWED";
         return(KDC_ERR_MUST_USE_USER2USER);
     }
